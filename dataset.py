@@ -1,6 +1,6 @@
 import glob
 import numpy as np
-from sklearn.cross_validation import train_test_split
+from sklearn.model_selection import train_test_split
 
 # Local dependencies
 import constants
@@ -42,10 +42,10 @@ class Dataset:
             
             path = folder.replace("\\", "/")
             #print(path)
-            if "/" in folder:
-                class_name = folder.split("/")[-1]
-            else:
+            if "\\" in folder:
                 class_name = folder.split("\\")[-1]
+            else:
+                class_name = folder.split("/")[-1]
             self.classes.append(class_name)
             #print(class_name)
 #            train = glob.glob(path + "/train/*")

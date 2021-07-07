@@ -6,6 +6,7 @@ import os
 # Local dependencies
 from classifier import Classifier
 from dataset import Dataset
+from custom import CustomDataset
 import descriptors
 import constants
 import utils
@@ -13,15 +14,15 @@ import filenames
 from log import Log
 
 
-def main(is_interactive=True, k=64, des_option=constants.ORB_FEAT_OPTION, svm_kernel=cv2.ml.SVM_LINEAR):
+def main(is_interactive=False, k=64, des_option=constants.ORB_FEAT_OPTION, svm_kernel=cv2.ml.SVM_LINEAR):
     if not is_interactive:
         experiment_start = time.time()
     # Check for the dataset of images
     if not os.path.exists(constants.DATASET_PATH):
         print("Dataset not found, please copy one.")
         return
-    dataset = Dataset(constants.DATASET_PATH)
-    dataset.generate_sets()
+    custom_dataset = CustomDataset("filelists/recognition36/novel_all.json")
+    dataset = custom_dataset.generate_few_shot_dataset()
 
     # Check for the directory where stores generated files
     if not os.path.exists(constants.FILES_DIR_NAME):
@@ -34,19 +35,12 @@ def main(is_interactive=True, k=64, des_option=constants.ORB_FEAT_OPTION, svm_ke
         svm_kernel = cv2.ml.SVM_LINEAR if svm_option == 1 else cv2.ml.SVM_RBF
 
     des_name = constants.ORB_FEAT_NAME if des_option == constants.ORB_FEAT_OPTION else constants.SIFT_FEAT_NAME
-    print(des_name)
+    print("descriptor type:", des_name)
     log = Log(k, des_name, svm_kernel)
     
 
     codebook_filename = filenames.codebook(k, des_name)
-    print('codebook_filename')
-    print(codebook_filename)
-    start = time.time()   
-    end = time.time()
-    log.train_des_time(end - start)
-    start = time.time()
-    end = time.time()
-    log.codebook_time(end - start)
+    print('codebook_filename:', codebook_filename)
     # Train and test the dataset
     classifier = Classifier(dataset, log)
     svm, cluster_model = classifier.train(svm_kernel, k, des_name, des_option=des_option, is_interactive=is_interactive)
@@ -84,4 +78,4 @@ def main(is_interactive=True, k=64, des_option=constants.ORB_FEAT_OPTION, svm_ke
         #raw_input("Press [Enter] to exit ...")
 
 if __name__ == '__main__':
-    main()
+    main(des_option=2, svm_kernel=cv2.ml.SVM_RBF)

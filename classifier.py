@@ -2,7 +2,7 @@ import cv2
 import numpy as np
 import time
 from sklearn.svm import LinearSVC 
-from sklearn.externals import joblib
+# from sklearn.externals import joblib
 from sklearn.cluster import MiniBatchKMeans
 # Local dependencies
 
@@ -51,6 +51,8 @@ class Classifier:
         utils.save(x_filename, x)
         end = time.time()
         svm_filename = filenames.svm(k, des_name, svm_kernel)
+        svm = LinearSVC(C=0.1)
+        svm = svm.fit(x, y)
         print("Calculating the Support Vector Machine for the training set...")
         return svm, cluster_model
 
@@ -84,7 +86,7 @@ class Classifier:
         self.log.accuracy(accuracy)
         return result, y
 
-    def get_data_and_labels(self, img_set, cluster_model, k, des_name, codebook,isTrain, des_option = constants.ORB_FEAT_OPTION):
+    def get_data_and_labels(self, img_set, cluster_model, k, des_name, codebook, isTrain, des_option = constants.ORB_FEAT_OPTION):
         """
         Calculates all the local descriptors for an image set and then uses a codebook to calculate the VLAD global
         descriptor for each image and stores the label with the class of the image.

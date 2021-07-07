@@ -14,7 +14,7 @@ import filenames
 
 def test_dataset():
     dataset = Dataset(constants.DATASET_PATH)
-    pickle.dump(dataset, open(constants.DATASET_OBJ_FILENAME, "wb"), protocol=constants.PICKLE_PROTOCOL)
+    # pickle.dump(dataset, open(constants.DATASET_OBJ_FILENAME, "wb"), protocol=constants.PICKLE_PROTOCOL)
     classes = dataset.get_classes()
     print("Dataset generated with {0} classes.".format(len(classes)))
     print(classes)
@@ -38,11 +38,11 @@ def test_descriptors():
     print("Normal Image")
     option = input("Enter [1] for using ORB features and other number to use SIFT.\n")
     start = time.time()
-    if option == 1:
-        orb = cv2.ORB()
+    if option == "1":
+        orb = cv2.ORB_create()
         kp, des = orb.detectAndCompute(img, None)
     else:
-        sift = cv2.SIFT()
+        sift = cv2.SIFT_create()
         kp, des = sift.detectAndCompute(img, None)
     end = time.time()
     elapsed_time = utils.humanize_time(end - start)
@@ -52,7 +52,7 @@ def test_descriptors():
     if des is not None and len(des) > 0:
         print("Dimension of descriptors {0}".format(len(des[0])))
     print("Name of descriptors used is {0}".format(des_name))
-    img2 = cv2.drawKeypoints(img, kp)
+    img2 = cv2.drawKeypoints(img, kp, img)
     # plt.imshow(img2), plt.show()
     cv2.imshow("{0} descriptors".format(des_name), img2)
     print("Press any key to exit ...")
@@ -111,4 +111,4 @@ def test_one_img_classification():
     print("result is {0}".format(result))
 
 if __name__ == '__main__':
-    test_descriptors()
+    test_dataset()

@@ -33,7 +33,7 @@ def sift(img,img_descs,y,class_number):
         list of floats array: The descriptors found in the image.
     """
     
-    sift = cv2.xfeatures2d.SIFT_create()
+    sift = cv2.SIFT_create()
     kp, des = sift.detectAndCompute(img, None)
     if des is not None:
         img_descs.append(des)
