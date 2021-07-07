@@ -18,10 +18,7 @@ from log import Log
 def main(is_interactive=False, k=64, des_option=constants.ORB_FEAT_OPTION, svm_kernel=cv2.ml.SVM_LINEAR):
     if not is_interactive:
         experiment_start = time.time()
-    # Check for the dataset of images
-    if not os.path.exists(constants.DATASET_PATH):
-        print("Dataset not found, please copy one.")
-        return
+
     custom_dataset = CustomDataset("filelists/recognition36/novel_all.json")
     dataset = custom_dataset.generate_few_shot_dataset()
 

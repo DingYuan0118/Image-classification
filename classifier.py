@@ -51,8 +51,6 @@ class Classifier:
         utils.save(x_filename, x)
         end = time.time()
         svm_filename = filenames.svm(k, des_name, svm_kernel)
-        svm = LinearSVC(C=0.1)
-        svm = svm.fit(x, y)
         print("Calculating the Support Vector Machine for the training set...")
         svm = cv2.ml.SVM_create()
         svm.setType(cv2.ml.SVM_C_SVC)
