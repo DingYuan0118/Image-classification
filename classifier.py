@@ -45,18 +45,18 @@ class Classifier:
         isTrain= True
         des_name = constants.ORB_FEAT_NAME if des_option == constants.ORB_FEAT_OPTION else constants.SIFT_FEAT_NAME
         x_filename = filenames.vlads_train(k, des_name)
-        print("Getting global descriptors for the training set.")
+        # print("Getting global descriptors for the training set.")
         start = time.time()
         x, y, cluster_model = self.get_data_and_labels(self.dataset.get_train_set(),None, k, des_name ,des_option,isTrain)
         utils.save(x_filename, x)
         end = time.time()
         svm_filename = filenames.svm(k, des_name, svm_kernel)
-        print("Calculating the Support Vector Machine for the training set...")
+        # print("Calculating the Support Vector Machine for the training set...")
         svm = cv2.ml.SVM_create()
         svm.setType(cv2.ml.SVM_C_SVC)
         svm.setKernel(svm_kernel)
         svm.setTermCriteria((cv2.TERM_CRITERIA_MAX_ITER, 100, 1e-6))
-        svm.train(x, cv2.ml.ROW_SAMPLE, y)
+        svm.trainAuto(x, cv2.ml.ROW_SAMPLE, y)
         return svm, cluster_model
 
     def test(self, svm, cluster_model, k, des_option = constants.ORB_FEAT_OPTION, is_interactive=True):
@@ -75,7 +75,7 @@ class Classifier:
         """
         isTrain = False
         des_name = constants.ORB_FEAT_NAME if des_option == constants.ORB_FEAT_OPTION else constants.SIFT_FEAT_NAME
-        print("Getting global descriptors for the testing set...")
+        # print("Getting global descriptors for the testing set...")
         start = time.time()
         x, y, cluster_model= self.get_data_and_labels(self.dataset.get_test_set(), cluster_model, k, des_name,isTrain,des_option)
         end = time.time()
@@ -119,9 +119,11 @@ class Classifier:
         isTrain = int(isTrain)
         if isTrain == 1:
             X, cluster_model = descriptors.cluster_features(des,cluster_model=MiniBatchKMeans(n_clusters=64))
+            # np.save("X"、)
         else:
             X = descriptors.img_to_vect(des,cluster_model)
-        print('X',X.shape,X)
+        X = X / X.max(axis=1, keepdims=True)
+        # print('X',X.shape,X)
         y = np.int32(y)[:,np.newaxis]
         x = np.matrix(X, dtype=np.float32)
         return x, y, cluster_model

@@ -33,7 +33,7 @@ def sift(img,img_descs,y,class_number):
         list of floats array: The descriptors found in the image.
     """
     
-    sift = cv2.SIFT_create()
+    sift = cv2.SIFT_create(nfeatures=200)
     kp, des = sift.detectAndCompute(img, None)
     if des is not None:
         img_descs.append(des)
@@ -209,7 +209,7 @@ def cluster_features(img_descs, cluster_model):
 
     # train kmeans or other cluster model on those descriptors selected above
     cluster_model.fit(all_train_descriptors)
-    print('done clustering. Using clustering model to generate BoW histograms for each image.')
+    # print('done clustering. Using clustering model to generate BoW histograms for each image.')
 
     # compute set of cluster-reduced words for each image
     img_clustered_words = [cluster_model.predict(raw_words) for raw_words in img_descs]
@@ -219,7 +219,6 @@ def cluster_features(img_descs, cluster_model):
         [np.bincount(clustered_words, minlength=n_clusters) for clustered_words in img_clustered_words])
 
     X = img_bow_hist
-    print('done generating BoW histograms.')
-
-    return X, cluster_model
+    # print('done generating BoW histograms.')
+    return X, cluster_model 
 

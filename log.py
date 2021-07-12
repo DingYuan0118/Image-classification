@@ -42,6 +42,7 @@ class Log:
         self.text += "Elapsed time predicting the testing set is {0}\n".format(elapsed_time)
 
     def accuracy(self, accuracy):
+        self.accuracy_num = accuracy
         self.text += "Accuracy = {0}.\n".format(accuracy)
 
     def classes(self, classes):

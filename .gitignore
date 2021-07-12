@@ -1,4 +1,7 @@
 __pycache__/
 tmp*
 filelists
-
+files/
+*.npy
+*.dat
+*.plk
